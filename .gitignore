@@ -1,0 +1,129 @@
+# =========================
+# Operating system / editor
+# =========================
+.DS_Store
+Thumbs.db
+*.swp
+*.swo
+*~
+.vscode/
+.idea/
+*.iml
+
+# =========================
+# Environment variables / secrets
+# =========================
+.env
+.env.*
+!.env.example
+!.env.sample
+*.pem
+*.key
+secrets/
+credentials/
+
+# =========================
+# Node.js / JavaScript
+# =========================
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+pnpm-debug.log*
+.npm/
+.yarn/
+dist/
+build/
+coverage/
+.next/
+.nuxt/
+.vite/
+
+# =========================
+# Python / AI / ML
+# =========================
+__pycache__/
+*.py[cod]
+*$py.class
+.Python
+.venv/
+venv/
+env/
+ENV/
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.ipynb_checkpoints/
+*.egg-info/
+wheels/
+pip-wheel-metadata/
+
+# Model artifacts and large generated datasets
+# Keep source code and small, explicitly versioned samples in Git.
+models/
+checkpoints/
+artifacts/
+runs/
+mlruns/
+wandb/
+data/raw/
+data/processed/
+datasets/
+*.pt
+*.pth
+*.ckpt
+*.onnx
+*.h5
+*.keras
+*.safetensors
+*.pkl
+*.pickle
+*.joblib
+
+# =========================
+# Embedded / hardware builds
+# =========================
+*.o
+*.a
+*.so
+*.dll
+*.dylib
+*.elf
+*.hex
+*.bin
+*.uf2
+*.map
+*.lst
+build-*/
+cmake-build-*/
+.platformio/
+.pio/
+*.log
+
+# =========================
+# Test / coverage outputs
+# =========================
+htmlcov/
+.tox/
+.nox/
+.junit/
+test-results/
+
+# =========================
+# Local databases and runtime data
+# =========================
+*.sqlite
+*.sqlite3
+*.db
+*.pid
+*.seed
+logs/
+tmp/
+temp/
+
+# =========================
+# Archives and generated files
+# =========================
+*.zip
+*.tar
+*.tar.gz
+*.7z
