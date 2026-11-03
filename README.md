@@ -44,6 +44,7 @@ Before contributing to SmartGreen, please read the following documents to unders
 
 Project documentation is maintained in the `docs/` directory.
 
+- [Digital Twins for Greenhouses](docs/Digital_Twins_for_Greenhouses.pdf) — Project onboarding and architecture guide (hardware, data stack, and AI roadmap).
 - `docs/team-guidelines/` — team processes, conventions, and collaboration rules
 
 ## Contributions
