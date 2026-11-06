@@ -25,10 +25,6 @@ reviewed before they become part of the shared code.
 
 ## 2. Branching Strategy
 
-## 2. Branching Strategy
-
-## 2. Branching Strategy
-
 SmartGreen follows a Git Flow-inspired branching strategy:
 
 | Branch | Purpose | Example |
