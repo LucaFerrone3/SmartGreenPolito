@@ -1,12 +1,10 @@
-# SmartGreenPolito
-
-## Software Development Guidelines
+# SmartGreen Software Development Guidelines
 
 *A practical working agreement for repositories, collaboration, and code
 quality*
 
-This document defines the common development workflow for SmartGreen
-software projects. Its purpose is to make collaboration predictable,
+This document defines the common development workflow for the SmartGreen
+software unit. Its purpose is to make collaboration predictable,
 keep the codebase understandable, and ensure that changes are tested and
 reviewed before they become part of the shared code.
 
@@ -21,68 +19,154 @@ reviewed before they become part of the shared code.
 -   Do not commit secrets, credentials, private keys, personal data,
     generated build artifacts, or local configuration files.
 -   Communicate early when blocked, when requirements are unclear, or
-    when a change may affect another unit or project.
+    when a change may affect another team or research project.
 
 ## 2. Branching Strategy
 
-SmartGreen follows a Git Flow-inspired branching strategy:
+SmartGreen follows a Git Flow-inspired branching strategy with a single
+integration branch shared by all teams.
 
-| Branch | Purpose | Example |
+### Long-lived branches
+
+| Branch | Purpose |
+|---|---|
+| `main` | Stable, reviewed, and release-ready code. Direct development is not allowed. |
+| `dev` | The single integration branch for all teams. Completed and reviewed work is combined and tested here before being released to `main`. |
+
+All five teams share one `dev`; teams do not have their own
+integration branches. Integrating often in one place surfaces conflicts
+and broken cross-team interfaces early, while they are still small.
+
+### Working branches
+
+Every other branch is a short-lived working branch, created from
+`dev` for exactly one YouTrack task:
+
+```text
+<type>/<team>/<issue-id>-<short-description>
+```
+
+| Part | Allowed values | Notes |
 |---|---|---|
-| `main` | Stable, reviewed, and release-ready code. Direct development is not allowed. | `main` |
-| `develop` | Integration branch where completed and reviewed features are combined and tested before being released to `main`. | `develop` |
-| `feature/<short-description>` | New functionality or enhancements, branched from `develop`. | `feature/sensor-dashboard` |
-| `fix/<short-description>` | Bug fixes, branched from `develop`. | `fix/csv-export` |
-| `docs/<short-description>` | Documentation-only changes, branched from `develop`. | `docs/setup-guide` |
-| `refactor/<short-description>` | Code restructuring without intended behavior changes, branched from `develop`. | `refactor/data-service` |
+| `<type>` | `feature`, `fix`, `docs`, `refactor` | The kind of change (see the table below). |
+| `<team>` | `team-1`, `team-2`, `team-3`, `team-4`, `team-5` | The team that owns the YouTrack task. |
+| `<issue-id>` | e.g. `SG-42` | The YouTrack issue ID, written exactly as it appears in YouTrack. |
+| `<short-description>` | e.g. `leaf-detection` | 2–5 lowercase English words separated by hyphens. |
+
+| Type | Use it for | Example |
+|---|---|---|
+| `feature` | New functionality or enhancements. | `feature/team-2/SG-42-leaf-detection` |
+| `fix` | Bug fixes. | `fix/team-1/SG-57-sensor-timeout` |
+| `docs` | Documentation-only changes. | `docs/team-4/SG-61-setup-guide` |
+| `refactor` | Code restructuring without intended behavior changes. | `refactor/team-3/SG-70-data-service` |
+
+Naming rules:
+
+-   No task, no branch: find or create the YouTrack issue before
+    creating the branch.
+-   One branch per task. If the work grows, split the task in YouTrack
+    and open a separate branch for the new part.
+-   Use only lowercase letters, digits, and hyphens (the issue ID keeps
+    its uppercase key). No spaces, accents, or underscores.
+-   If a task involves more than one team, use the code of the team that
+    owns the task in YouTrack and ask the other teams to review the PR.
+-   Keep branches short-lived: merge them within the sprint in which
+    they were created, and delete them once the PR is merged.
 
 ### Branching Workflow
 
-1. Create feature, fix, docs, or refactor branches from the latest `develop`.
-2. Implement the changes and commit them using clear, descriptive messages.
-3. Open a pull request targeting `develop`.
-4. Have the pull request reviewed and approved by at least one other team member.
-5. Merge the approved pull request into `develop` after all required checks pass.
-6. Once `develop` is tested and considered stable, open a pull request from `develop` to `main`.
-7. Merge into `main` only after the release has been reviewed and approved.
+1. Pick a YouTrack task and create its branch from the latest `dev`:
 
-Direct commits to `main` and `develop` are not allowed. All changes must go through pull requests.
+   ```bash
+   git switch dev
+   git pull
+   git switch -c feature/team-2/SG-42-leaf-detection
+   ```
+
+2. Implement the changes and commit them following the commit
+   conventions (see Section 3).
+3. Merge the latest `dev` into your branch at least once a week and
+   before opening the pull request, so conflicts are solved early.
+4. Open a pull request targeting `dev`. Write the PR title in the same
+   format as a commit message (see Section 3) and end it with the
+   YouTrack issue ID in parentheses, for example
+   `feat: add leaf detection model (SG-42)`. YouTrack links the PR to
+   the task through the ID in the title.
+5. Have the pull request reviewed and approved by at least one other team member.
+6. After all required checks pass, merge the approved pull request into
+   `dev` with **Squash and merge**, keeping the PR title as the commit
+   message, then delete the branch.
+7. Once `dev` is tested and considered stable, open a pull request from `dev` to `main`.
+8. Merge into `main` with **Create a merge commit** (never squash), only
+   after the release has been reviewed and approved by the Software
+   Unit Lead.
+
+Why two different merge methods:
+
+-   **Squash and merge into `dev`** turns each task into exactly one
+    commit on `dev`, whose message has a type and the YouTrack issue ID.
+    The history of `dev` stays readable, and every commit is linked to
+    its task.
+-   **Create a merge commit into `main`** keeps all the commits of `dev`
+    in `main`, so the next release merges cleanly. Squashing a release
+    would rewrite those commits on `main`, and the following release
+    would show the same changes again and could conflict.
+
+Direct commits to `main` and `dev` are not allowed. All changes must go through pull requests.
 
 ## 3. Commits
 
 -   Make commits that represent meaningful, logical steps; avoid huge
     commits that mix unrelated changes.
--   Use short, imperative commit messages, for example:
-    `Add greenhouse temperature logging` or
-    `Fix sensor timeout handling`.
+-   Write commit messages following
+    [Conventional Commits](https://www.conventionalcommits.org/):
+    `<type>: <short description>`, with the description in English,
+    lowercase, and in the imperative mood. An optional scope in
+    parentheses can name the affected component.
+-   Use one of these types:
+
+| Type | Use it for | Example |
+|---|---|---|
+| `feat` | New functionality or enhancements | `feat: add greenhouse temperature logging` |
+| `fix` | Bug fixes | `fix(sensors): handle sensor timeout` |
+| `docs` | Documentation-only changes | `docs: update setup guide` |
+| `refactor` | Code restructuring without behavior changes | `refactor: split data service` |
+| `test` | Adding or updating tests | `test: cover missing sensor readings` |
+| `chore` | Maintenance, configuration, dependencies | `chore: update python dependencies` |
+
+-   Pull request titles follow the same format, followed by the YouTrack
+    issue ID: `<type>: <short description> (<issue-id>)`. When a PR is
+    squash-merged into `dev`, its title becomes the commit message (see
+    Section 2).
 -   Do not commit code that is knowingly broken, unrelated formatting
     changes, or commented-out blocks of obsolete code.
 -   Never include passwords, API keys, tokens, or other secrets in a
-    commit---even temporarily. If a secret is exposed, notify the
+    commit, even temporarily. If a secret is exposed, notify the
     repository maintainer immediately and rotate it.
 
 ## 4. Pull Requests (PRs)
 
-All changes to `main` must go through a pull request. A PR is a request
+All changes to `main` and `dev` must go through a pull request. A PR is a request
 to integrate a branch and the place where the team discusses and
 validates the change.
 
 ### Before opening a PR
 
--   Confirm the change addresses an agreed task or issue and has a clear
+-   Confirm the change addresses an agreed YouTrack task and has a clear
     scope.
 -   Run the relevant tests, checks, and build locally; inspect the final
     diff for accidental changes.
 -   Update documentation or configuration examples when behavior, setup,
     interfaces, or workflows change.
--   Ensure the branch is reasonably up to date with `main`.
+-   Ensure the branch is reasonably up to date with `dev`.
 
 ### PR description
 
 Every PR should:
 
 -   Explain what changed and why.
--   Link the related issue or task, if one exists.
+-   Include the YouTrack issue ID in the title, so that the PR is linked
+    to its task (see Section 2).
 -   Describe how the change was tested and include relevant results.
 -   Call out known limitations, follow-up work, database or
     configuration changes, and any risks.
@@ -114,7 +198,8 @@ procedure.
 
 ## 6. Definition of Done
 
-In accordance with the Agile Scrum approach, the Definition of Done (DoD)
+As part of our Agile approach (see [How We Work](how-we-work.md)), the
+Definition of Done (DoD)
 establishes the shared quality standards that work must satisfy to be
 considered complete.
 
@@ -144,9 +229,10 @@ are satisfied:
       targeting the appropriate branch.
 - [ ] The PR has been reviewed and approved by at least one other
       team member.
-- [ ] All required automated checks and CI workflows pass.
+- [ ] All required automated checks pass (once CI workflows are
+      configured).
 - [ ] The changes have been merged into the appropriate target branch,
-      and the related task is updated or closed.
+      and the related YouTrack task is updated or closed.
 
 ### Additional Considerations
 
@@ -160,10 +246,11 @@ the Definition of Done also includes, where applicable:
 - [ ] Experimental results, limitations, and relevant assumptions
       are documented and reproducible.
 
-The Definition of Done is a shared commitment to quality. Meeting the
-Definition of Done does not automatically mean that the Sprint Goal
-has been achieved; the Sprint Goal is evaluated separately at the
-Sprint Review.
+The Definition of Done is a shared commitment to quality. A user story
+is complete only when all of its tasks meet the Definition of Done.
+Only completed stories are presented at the Sprint Review; unfinished
+stories go back to the backlog and are prioritized again by the Project
+Manager.
 
 ## 7. Comments and Documentation
 
@@ -199,10 +286,11 @@ into English.
 ## 9. Collaboration and Ownership
 
 -   Discuss architectural changes, new dependencies, data schema
-    changes, and cross-unit interfaces with the affected team members
-    before implementation.
--   During sprint planning, team members decompose agreed work into
-    manageable tasks and coordinate ownership with the team.
+    changes, and interfaces shared between teams with the affected
+    teams before implementation.
+-   During Sprint Planning, each team breaks the user stories assigned
+    to it into tasks and agrees who owns each one (see
+    [How We Work](how-we-work.md#sprint-planning)).
 -   Raise blockers and integration risks promptly rather than waiting
     until the end of the sprint.
 -   Leave the codebase in a state that another member can run,
@@ -212,13 +300,20 @@ into English.
 
 Before requesting review, check that:
 
--   [ ] I worked on the correct branch and kept the change focused.
+-   [ ] My branch follows the naming convention
+    (`<type>/<team>/<issue-id>-<short-description>`) and the change is
+    focused on one task.
 -   [ ] I checked the diff and removed debug code and accidental files.
 -   [ ] I ran relevant tests/builds and recorded the results.
 -   [ ] I updated comments or documentation where necessary.
+-   [ ] My PR title follows `<type>: <short description> (<issue-id>)`.
 -   [ ] My PR explains the purpose, scope, and verification steps.
--   [ ] A teammate reviewed and approved the PR, and required checks
-    pass.
+
+Before merging, check that:
+
+-   [ ] A teammate reviewed and approved the PR.
+-   [ ] Required checks pass.
+-   [ ] The related YouTrack task is updated.
 
 ------------------------------------------------------------------------
 

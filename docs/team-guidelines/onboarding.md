@@ -1,8 +1,8 @@
-# Onboarding guide - Smartgreen 2026/2027
+# Onboarding Guide – SmartGreen 2026/2027
 
-The goal of this document is to understand:
+This guide is for new members of the SmartGreen software unit. It explains:
 - what the team is building
-- how the team works
+- how the software unit works
 
 ## Who we are
 
@@ -16,9 +16,9 @@ As a student-led initiative, SmartGreen provides its members with the opportunit
 
 ## Our current projects
 
-SmartGreen is currently working on two main research projects, **Astrotuber** and **SaS**, both supported by the development of a Smart Greenhouse. These projects explore innovative approaches to plant cultivation in challenging environments, combining experimental research, data collection, and engineering.
+SmartGreen is currently working on two research projects, **Astrotuber** and **SaS**, both supported by a shared **Smart Greenhouse**. These projects explore innovative approaches to plant cultivation in challenging environments, combining experimental research, data collection, and engineering.
 
-### 1. Astrotuber – Plant Cultivation in Martian Regolith
+### Astrotuber – Plant Cultivation in Martian Regolith
 
 Astrotuber investigates the possibility of growing plants using Martian regolith simulant as a cultivation substrate. The project aims to understand how plants interact with Martian soil simulants and how their growth can be supported in an environment with limited natural resources.
 
@@ -26,7 +26,7 @@ A key aspect of the research is the investigation of carbon sources derived from
 
 By studying plant growth under these conditions, Astrotuber explores potential solutions for future space agriculture and the development of sustainable cultivation systems for extraterrestrial environments.
 
-### 2. SaS – Salicornia and Salinized Water
+### SaS – Salicornia and Salinized Water
 
 SaS focuses on the potential of Salicornia, a salt-tolerant plant, to absorb salts from salinized water. The project investigates the plant's capacity to take up salts and aims to identify which specific salts can be absorbed and to what extent.
 
@@ -34,7 +34,7 @@ Through experimental cultivation and data collection, the project seeks to impro
 
 This research contributes to the broader objective of developing more sustainable approaches to agriculture and water resource management in environments affected by high salinity.
 
-### 3. Smart Greenhouse – Experimental and Educational Infrastructure
+### Shared infrastructure: the Smart Greenhouse
 
 The Smart Greenhouse is a shared infrastructure supporting both Astrotuber and SaS. It serves as an experimental platform for research and as a fundamental educational tool for SmartGreen members.
 
@@ -46,44 +46,36 @@ At the same time, the greenhouse provides team members with practical experience
 
 By combining a common technological infrastructure with two distinct research projects, SmartGreen aims to connect hands-on engineering, scientific experimentation, and sustainable innovation.
 
-## Our organizational units
+## How the software unit works
 
-The team is structured into three main organizational units, each with a clearly defined area of responsibility:
+The software unit develops and maintains the code in this repository. It is organized into five self-organizing teams (`team-1` to `team-5`) that share the same backlog, the same sprints, and the same integration branch.
 
-- **AI & Software** — oversees the entire software lifecycle, from architectural design and implementation to ongoing maintenance and evolution of the Smart Greenhouse systems. It focuses primarily on the development of the greenhouse's software infrastructure, including data acquisition, processing, and analysis.
-- **Hardware** — leads the design, assembly, and maintenance of the Smart Greenhouse's physical infrastructure, including sensor systems, automation mechanisms, and all electrical components.
-- **Agronomy & Cultivation** — primarily leads the scientific and experimental implementation of the Astrotuber and SaS projects. It conducts the agronomic and chemical analysis of the cultivation systems, providing the domain expertise that guides cultivation strategies and informs the technical work of the other units. It monitors the presence and concentration of pollutants in water and cultivation substrates, investigates their interactions with plants, and evaluates the uptake and accumulation of these substances over time to assess plant responses and support the development of sustainable cultivation systems.
+We follow our own Agile approach, inspired by Scrum and adapted to a student team. Work is organized into four-week sprints, each with these events:
 
-## Our development approach
+- **Sprint Planning** — at the start of the sprint, the Project Manager assigns the highest-priority user stories to the teams, and each team breaks its stories into tasks and distributes them among its members.
+- **Weekly Sync** — every week, a short check on progress and blockers.
+- **Sprint Review** — at the end of the sprint, the teams show the work they completed.
+- **Sprint Retrospective** — after the Review, the unit discusses how to work better in the next sprint.
 
-Our units will adapt an **Agile approach based on the Scrum framework**. If you are new to Agile, read [What is Agile](scrum-guide-for-the-team.md) first.
+Next, read:
 
-The development process will be organized into four-week sprints.
+1. [How We Work](how-we-work.md) — roles, sprint events, and how user stories and tasks are managed.
+2. [Software Development Guidelines](software-development-guidelines.md) — Git branches, commits, pull requests, code review, and the Definition of Done.
 
-For each sprint, we will schedule these types of events:
+### Roles
 
-- **Sprint Planning Meeting** — scheduled at the start of the Sprint, max ~4 hours
+| Role | Person |
+|---|---|
+| Project Manager | Luca Ferrone |
+| Software Unit Lead | Luca Ferrone |
 
-- **Weekly Scrum Meeting** — scheduled every week, max 30 minutes
+The responsibilities of each role are described in [How We Work](how-we-work.md#3-roles).
 
-- **Sprint Review Meeting** — scheduled at the end of the Sprint, max ~2 hours
-
-- **Sprint Retrospective Meeting** — scheduled after the Review, max ~1.5 hours
-
-During the Sprint Planning Meeting, each unit will autonomously decompose the assigned user stories into smaller, manageable tasks and distribute them among its members, based on their skills, availability, and mutual agreement. 
-
-Each unit will then be responsible for implementing and monitoring its tasks throughout the sprint, ensuring continuous progress, effective collaboration, and the achievement of the sprint objectives.
-
-Roles:
-- **Product Owner:** Luca Ghiotto.
-- **Scrum Master:** Luca Ferrone.
-
-## Used tools
+## Tools we use
 
 | Tool | Used for |
 |---|---|
-| **Google Meet** | Meetings and all Scrum events |
-| **ClickUp** | Backlog, Sprints and task assignment |
-| **GitHub** | Code hosting, version control and code review |
+| **Google Meet** | Meetings and sprint events |
+| **YouTrack** | Backlog, user stories, sprints, and task assignment |
+| **GitHub** | Code hosting, version control, pull requests, and code review |
 | **VS Code** | Writing and editing code |
-

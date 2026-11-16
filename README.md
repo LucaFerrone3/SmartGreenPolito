@@ -5,40 +5,43 @@ SmartGreen is a smart greenhouse project focused on monitoring and supporting gr
 ## Project Structure
 
 ```text
-smartgreen/
-├── greenhouse-controller/  # Hardware, sensors, and actuators
-├── ai-model/               # AI model, training, and inference code
+SmartGreenPolito/
+├── greenhouse-controller/  # Hardware, sensors, and actuators (planned)
+├── ai-model/               # AI model, training, and inference code (planned)
 ├── docs/                   # Project and team documentation
 │   └── team-guidelines/    # Team workflow, conventions, and guidelines
-├── tests/                  # Cross-component and integration tests
+├── tests/                  # Cross-component and integration tests (planned)
 ├── .gitignore
 └── README.md
 ```
 
-> The structure may evolve as the project develops. Each component may include its own README with setup and usage instructions.
+> Folders marked *(planned)* will be added as development progresses. The structure may evolve, and each component may include its own README with setup and usage instructions.
 
 ## Getting Started
 
-1. Clone the repository:
+1. Clone the repository and switch to the `dev` branch, where all work starts:
 
    ```bash
    git clone https://github.com/LucaFerrone3/SmartGreenPolito.git
-   cd smartgreen
+   cd SmartGreenPolito
+   git switch dev
    ```
 
-2. Open the component you want to work on ( `greenhouse-controller/`, `ai-model/`, `docs/` or `tests/`).
+2. Open the component you want to work on.
 
 3. Follow the setup and execution instructions in that component's README, when available.
 
 ## Development Workflow
 
-The team follows an Agile approach based on Scrum, with four-week sprints.
+The software unit follows its own Agile approach, inspired by Scrum, with four-week sprints.
 
-Before contributing to SmartGreen, please read the following documents to understand the team's organization, development process, and coding standards.
+Before contributing to SmartGreen, please read the following documents to understand the team's organization, development process, and coding standards:
 
-- [Onboarding Guide](onboarding_smartgreen.md) — Introduction to SmartGreen, its projects, organizational units, development approach, Scrum events, team roles, and tools.
+- [Onboarding Guide](docs/team-guidelines/onboarding.md) — Introduction to SmartGreen, its research projects, how the software unit is organized, roles, and tools.
 
-- [Software Development Guidelines](SmartGreen_Software_Development_Guidelines.md) — Development workflow, Git branching strategy, commits, pull requests, code reviews, Definition of Done, testing, and collaboration standards.
+- [How We Work](docs/team-guidelines/how-we-work.md) — Our Agile approach: roles, sprint events, backlog, user stories, and tasks.
+
+- [Software Development Guidelines](docs/team-guidelines/software-development-guidelines.md) — Git branching strategy, commits, pull requests, code reviews, Definition of Done, testing, and collaboration standards.
 
 ## Documentation
 
