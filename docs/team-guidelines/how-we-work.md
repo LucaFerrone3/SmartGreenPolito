@@ -55,7 +55,7 @@ Responsible for **how well the unit works**. Think of a coach, not a boss.
 
 - Facilitates the sprint events
 - Helps the teams remove blockers and coordinates work that involves more than one team
-- Approves releases from `dev` to `main`
+- Decides when `dev` is released to `main`, and merges the release
 
 ### Teams
 

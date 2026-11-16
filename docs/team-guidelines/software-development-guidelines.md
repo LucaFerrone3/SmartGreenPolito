@@ -48,7 +48,7 @@ Every other branch is a short-lived working branch, created from
 
 | Part | Allowed values | Notes |
 |---|---|---|
-| `<type>` | `feature`, `fix`, `docs`, `refactor` | The kind of change (see the table below). |
+| `<type>` | `feature`, `fix`, `docs`, `refactor`, `test`, `chore` | The kind of change (see the table below). |
 | `<team>` | `team-1`, `team-2`, `team-3`, `team-4`, `team-5` | The team that owns the YouTrack task. |
 | `<issue-id>` | e.g. `SG-42` | The YouTrack issue ID, written exactly as it appears in YouTrack. |
 | `<short-description>` | e.g. `leaf-detection` | 2–5 lowercase English words separated by hyphens. |
@@ -59,6 +59,8 @@ Every other branch is a short-lived working branch, created from
 | `fix` | Bug fixes. | `fix/team-1/SG-57-sensor-timeout` |
 | `docs` | Documentation-only changes. | `docs/team-4/SG-61-setup-guide` |
 | `refactor` | Code restructuring without intended behavior changes. | `refactor/team-3/SG-70-data-service` |
+| `test` | Adding or updating tests only. | `test/team-5/SG-75-sensor-readings` |
+| `chore` | Maintenance, configuration, dependencies. | `chore/team-1/SG-80-update-dependencies` |
 
 Naming rules:
 
@@ -86,7 +88,9 @@ Naming rules:
 2. Implement the changes and commit them following the commit
    conventions (see Section 3).
 3. Merge the latest `dev` into your branch at least once a week and
-   before opening the pull request, so conflicts are solved early.
+   before opening the pull request, so conflicts are solved early. If
+   `dev` moves while the PR is open, GitHub blocks the merge until you
+   bring it in again with **Update branch** on the PR.
 4. Open a pull request targeting `dev`. Write the PR title in the same
    format as a commit message (see Section 3) and end it with the
    YouTrack issue ID in parentheses, for example
@@ -96,10 +100,11 @@ Naming rules:
 6. After all required checks pass, merge the approved pull request into
    `dev` with **Squash and merge**, keeping the PR title as the commit
    message, then delete the branch.
-7. Once `dev` is tested and considered stable, open a pull request from `dev` to `main`.
-8. Merge into `main` with **Create a merge commit** (never squash), only
-   after the release has been reviewed and approved by the Software
-   Unit Lead.
+7. When the Software Unit Lead considers `dev` tested and stable, they
+   open a pull request from `dev` to `main` (a release).
+8. Like every PR, the release needs the approval of another team
+   member. The Software Unit Lead then merges it into `main` with
+   **Create a merge commit** (never squash).
 
 Why two different merge methods:
 
@@ -112,7 +117,33 @@ Why two different merge methods:
     would rewrite those commits on `main`, and the following release
     would show the same changes again and could conflict.
 
-Direct commits to `main` and `dev` are not allowed. All changes must go through pull requests.
+Direct commits to `main` and `dev` are not allowed. All changes must go
+through pull requests (the only exception is the repository
+administrator, see below).
+
+### Automated checks
+
+GitHub enforces the branch flow, so a PR that breaks a rule cannot be
+merged:
+
+| Check or rule | Applies to | What it enforces |
+|---|---|---|
+| `Validate branch flow` | PRs into `dev` and `main` | Only branches that follow the naming convention can be merged into `dev`; only `dev` can be merged into `main`. |
+| `Validate PR title` | PRs into `dev` | The title follows `<type>: <short description> (<issue-id>)` and uses the same issue ID as the branch. |
+| Ruleset `Protect dev` | `dev` | A PR with one approval, resolved conversations, and both checks above; the branch must contain the latest `dev`; **Squash and merge** only. |
+| Ruleset `Protect main` | `main` | A PR with one approval, resolved conversations, and `Validate branch flow`; **Create a merge commit** only. |
+
+Both branches cannot be deleted or force-pushed, and team members cannot
+push to them directly. The only exception is the repository
+administrator, who can bypass these rules when needed (for example, to
+update the team documentation directly). If a check fails, open its log
+on the PR: it explains what is wrong and how to fix it.
+
+The checks are defined in
+[`.github/workflows/branch-flow.yml`](../../.github/workflows/branch-flow.yml).
+The rules are kept as code in [`.github/rulesets`](../../.github/rulesets)
+and imported in the repository settings (Settings → Rules → Rulesets →
+New ruleset → Import a ruleset).
 
 ## 3. Commits
 
@@ -158,11 +189,13 @@ validates the change.
     diff for accidental changes.
 -   Update documentation or configuration examples when behavior, setup,
     interfaces, or workflows change.
--   Ensure the branch is reasonably up to date with `dev`.
+-   Make sure the branch contains the latest `dev` (GitHub requires it
+    before merging).
 
 ### PR description
 
-Every PR should:
+The [pull request template](../../.github/PULL_REQUEST_TEMPLATE.md) is
+filled in automatically when you open a PR. Every PR should:
 
 -   Explain what changed and why.
 -   Include the YouTrack issue ID in the title, so that the PR is linked
@@ -229,8 +262,7 @@ are satisfied:
       targeting the appropriate branch.
 - [ ] The PR has been reviewed and approved by at least one other
       team member.
-- [ ] All required automated checks pass (once CI workflows are
-      configured).
+- [ ] All required automated checks pass (see Section 2).
 - [ ] The changes have been merged into the appropriate target branch,
       and the related YouTrack task is updated or closed.
 

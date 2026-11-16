@@ -1,0 +1,93 @@
+# This workflow enforces the SmartGreen branch flow
+# (docs/team-guidelines/software-development-guidelines.md, Section 2):
+#
+#   <type>/<team>/<issue-id>-<short-description> ──> dev ──> main
+#
+# It performs two checks:
+#
+# 1. Validates the branch flow: only working branches with a valid name can be merged into dev,
+#    and only dev can be merged into main (a release).
+# 2. For Pull Requests into dev, validates the title: "<type>: <short description> (<issue-id>)",
+#    with the same issue ID as the branch. The title matters because Pull Requests into dev are
+#    squash-merged, so the title becomes the commit message on dev.
+#
+# The rulesets in .github/rulesets require these checks. They also require a branch to contain the
+# current dev before it is merged into dev, so that check is not repeated here.
+
+name: Branch Flow
+
+on:
+  pull_request:
+    # "edited" runs the checks again when the title of the Pull Request changes.
+    types: [opened, edited, reopened, synchronize]
+    branches:
+      - dev
+      - main
+
+jobs:
+  validate-branch-flow:
+    name: Validate branch flow
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Validate source and target branches
+        env:
+          HEAD_BRANCH: ${{ github.head_ref }}
+          BASE_BRANCH: ${{ github.base_ref }}
+        run: |
+          echo "Pull Request: $HEAD_BRANCH -> $BASE_BRANCH"
+
+          if [[ "$BASE_BRANCH" == "main" ]]; then
+            if [[ "$HEAD_BRANCH" != "dev" ]]; then
+              echo "ERROR: Only 'dev' can be merged into 'main' (a release)."
+              echo "Open the Pull Request against 'dev' instead."
+              exit 1
+            fi
+            echo "Branch flow is valid: release from dev to main."
+            exit 0
+          fi
+
+          pattern='^(feature|fix|docs|refactor|test|chore)/team-[1-5]/[A-Z][A-Z0-9]*-[0-9]+-[a-z0-9]+(-[a-z0-9]+){1,4}$'
+          if [[ ! "$HEAD_BRANCH" =~ $pattern ]]; then
+            echo "ERROR: '$HEAD_BRANCH' does not follow the branch naming convention:"
+            echo "  <type>/<team>/<issue-id>-<short-description>"
+            echo "  e.g. feature/team-2/SG-42-leaf-detection"
+            echo "Types: feature, fix, docs, refactor, test, chore. Teams: team-1 ... team-5."
+            echo "The description is 2-5 lowercase words separated by hyphens."
+            echo "Rename the branch (git branch -m <new-name>), push it, and open a new Pull Request."
+            exit 1
+          fi
+
+          echo "Branch flow is valid."
+
+  validate-pr-title:
+    name: Validate PR title
+    if: github.base_ref == 'dev'
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Check the title format and the issue ID
+        env:
+          TITLE: ${{ github.event.pull_request.title }}
+          HEAD_BRANCH: ${{ github.head_ref }}
+        run: |
+          echo "Title: $TITLE"
+
+          pattern='^(feat|fix|docs|refactor|test|chore)(\([a-z0-9-]+\))?: [a-z0-9].* \(([A-Z][A-Z0-9]*-[0-9]+)\)$'
+          if [[ ! "$TITLE" =~ $pattern ]]; then
+            echo "ERROR: the title must follow '<type>: <short description> (<issue-id>)'."
+            echo "  e.g. feat: add leaf detection model (SG-42)"
+            echo "Types: feat, fix, docs, refactor, test, chore. The description starts with a lowercase letter or a digit."
+            echo "Edit the title of the Pull Request: this check runs again automatically."
+            exit 1
+          fi
+          title_id="${BASH_REMATCH[3]}"
+
+          branch_id=$(echo "$HEAD_BRANCH" | cut -d/ -f3 | grep -oE '^[A-Z][A-Z0-9]*-[0-9]+' || true)
+          if [[ "$title_id" != "$branch_id" ]]; then
+            echo "ERROR: the title refers to $title_id, but the branch refers to ${branch_id:-no issue}."
+            echo "Use the same YouTrack issue ID in the branch name and in the title."
+            exit 1
+          fi
+
+          echo "The title is valid and refers to $title_id."

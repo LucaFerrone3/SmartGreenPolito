@@ -6,6 +6,7 @@ SmartGreen is a smart greenhouse project focused on monitoring and supporting gr
 
 ```text
 SmartGreenPolito/
+├── .github/                # Branch flow checks, branch rulesets, PR template
 ├── greenhouse-controller/  # Hardware, sensors, and actuators (planned)
 ├── ai-model/               # AI model, training, and inference code (planned)
 ├── docs/                   # Project and team documentation
